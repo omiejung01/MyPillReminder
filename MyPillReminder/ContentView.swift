@@ -16,8 +16,12 @@ struct ContentView: View {
             }
             
             Tab ("Dashboard", systemImage: "inset.filled.rectangle.and.person.filled") {
-                Text ("Pill's dashboard")
+                DashboardView()
             }
+            
+            Tab("History", systemImage: "clock.arrow.circlepath") {
+                    PillHistoryView()
+                }
             
             Tab ("User Profiles", systemImage: "person.circle") {
                 ProfileView()

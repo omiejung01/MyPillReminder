@@ -13,7 +13,11 @@ struct MyPillReminderApp: App {
     var body: some Scene {
         WindowGroup {
             LaunchScreenView()
+            //let schedule = PillSchedule()
+            //PillScheduleView(schedule: schedule)
         }
-        .modelContainer(for: [Pill.self])
+        .modelContainer(for: [Pill.self, PillSchedule.self, PillTaking.self])
+        
+        
     }
 }

@@ -19,7 +19,7 @@ struct PillList: View {
                 if !pills.isEmpty {
                     List {
                         ForEach(pills) { pill in
-                            NavigationLink(pill.name) {
+                            NavigationLink(pill.name + " - " + pill.unit) {
                                 PillDetail(pill: pill)
                             }
                         }
@@ -38,12 +38,13 @@ struct PillList: View {
                     EditButton()
                 }
             }
+            /*
             .sheet(item: $newPill) { pill in
                 NavigationStack {
                     PillDetail(pill: pill, isNew: true)
                 }
                 .interactiveDismissDisabled()
-            }
+            }*/
         } detail: {
             Text("Select a pill")
                 .navigationTitle("Pill")

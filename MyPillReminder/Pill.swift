@@ -12,6 +12,7 @@ import SwiftData
 class Pill {
     var name: String
     var unit: String
+    var schedule: PillSchedule?
     
     init(name: String, unit: String) {
         self.name = name

@@ -15,8 +15,6 @@ struct PillDetail: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var context
     
-    @Query(sort: \Pill.name) private var pills: [Pill]
-
     init(pill: Pill, isNew: Bool = false) {
         self.pill = pill
         self.isNew = isNew
@@ -24,19 +22,19 @@ struct PillDetail: View {
     
     var body: some View {
         Form {
-            TextField("Name", text: $pill.name )
-                .autocorrectionDisabled()
-            TextField("Unit", text: $pill.unit )
-                .autocorrectionDisabled()
+            Section("Pill Info") {
+                TextField("Name", text: $pill.name)
+                    .autocorrectionDisabled()
+                TextField("Unit", text: $pill.unit)
+                    .autocorrectionDisabled()
+            }
             
-            /*
-            Picker("Favorite Movie", selection: $friend.favoriteMovie) {
-                ForEach(movies) { movie in
-                    Text(movie.title)
-                        .tag(nil as Movie?)
+            Section("Schedule") {
+                // Navigate to the persisted schedule
+                NavigationLink("Setup Schedulers") {
+                    PillScheduleView(schedule: getOrCreateSchedule())
                 }
-                
-            }*/
+            }
         }
         .navigationTitle(isNew ? "New Pill" : "Pill")
         .navigationBarTitleDisplayMode(.inline)
@@ -44,20 +42,35 @@ struct PillDetail: View {
             if isNew {
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Save") {
+                        try? context.save()
                         dismiss()
                     }
                 }
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") {
+                        context.delete(pill)
+                        try? context.save()
                         dismiss()
                     }
                 }
             }
         }
     }
+    
+    /// Returns the existing schedule or creates and attaches a new one once
+    private func getOrCreateSchedule() -> PillSchedule {
+        if let existing = pill.schedule {
+            return existing
+        }
+        
+        let customPattern = Date().formatted(.dateTime.year().month(.twoDigits).day(.twoDigits))
+        let scheduleName = (pill.name.isEmpty ? "Pill" : pill.name) + " (\(customPattern))"
+        
+        let newSchedule = PillSchedule(name: scheduleName)
+        context.insert(newSchedule)
+        pill.schedule = newSchedule
+        try? context.save()
+        
+        return newSchedule
+    }
 }
-
-/*
-#Preview {
-    PillDetail()
-}*/
