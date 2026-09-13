@@ -10,6 +10,11 @@ import SwiftData
 
 @main
 struct MyPillReminderApp: App {
+    
+    init() {
+        NotificationManager.shared.requestAuthorization()
+    }
+    
     var body: some Scene {
         WindowGroup {
             LaunchScreenView()

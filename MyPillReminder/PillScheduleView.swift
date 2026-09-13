@@ -203,7 +203,9 @@ struct PillScheduleView: View {
         .navigationBarTitleDisplayMode(.inline)
         .onDisappear {
             try? context.save()
-        }
+            NotificationManager.shared.scheduleNotifications(for: schedule)
+            
+        }       
     }
 }
 

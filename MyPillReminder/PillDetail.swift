@@ -63,8 +63,9 @@ struct PillDetail: View {
             return existing
         }
         
-        let customPattern = Date().formatted(.dateTime.year().month(.twoDigits).day(.twoDigits))
-        let scheduleName = (pill.name.isEmpty ? "Pill" : pill.name) + " (\(customPattern))"
+        //let customPattern = Date().formatted(.dateTime.year().month(.twoDigits).day(.twoDigits))
+        //let scheduleName = (pill.name.isEmpty ? "Pill" : pill.name) + " (\(customPattern))"
+        let scheduleName = (pill.name.isEmpty ? "Pill" : pill.name)
         
         let newSchedule = PillSchedule(name: scheduleName)
         context.insert(newSchedule)

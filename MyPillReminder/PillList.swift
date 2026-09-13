@@ -61,7 +61,12 @@ struct PillList: View {
     
     private func deletePills(indexes: IndexSet) {
         for index in indexes {
-            context.delete(pills[index])
+            //context.delete(pills[index])
+            let pill = pills[index]
+            if let schedule = pill.schedule {
+                NotificationManager.shared.cancelNotifications(for: schedule)
+            }
+            context.delete(pill)
         }
     }
 }
