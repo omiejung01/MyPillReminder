@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 @main
 struct MyPillReminderApp: App {
@@ -13,5 +14,6 @@ struct MyPillReminderApp: App {
         WindowGroup {
             LaunchScreenView()
         }
+        .modelContainer(for: [Pill.self])
     }
 }

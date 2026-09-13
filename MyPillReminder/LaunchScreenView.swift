@@ -15,7 +15,7 @@ struct LaunchScreenView: View {
             ContentView()
         } else {
             ZStack {
-                LinearGradient(colors: [Color.blue, Color.mint], startPoint: .topLeading, endPoint: .bottomTrailing)
+                LinearGradient(colors: [Color.indigo, Color.mint], startPoint: .topLeading, endPoint: .bottomTrailing)
                     .edgesIgnoringSafeArea(.all)
                 VStack {
                     Image("pillIcon")
