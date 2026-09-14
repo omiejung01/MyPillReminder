@@ -34,6 +34,8 @@ struct PillDetail: View {
                 NavigationLink("Setup Schedulers") {
                     PillScheduleView(schedule: getOrCreateSchedule())
                 }
+                // Optional: disable until the user enters a pill name
+                .disabled(pill.name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
             }
         }
         .navigationTitle(isNew ? "New Pill" : "Pill")
@@ -57,17 +59,19 @@ struct PillDetail: View {
         }
     }
     
-    /// Returns the existing schedule or creates and attaches a new one once
+    /// Returns the existing schedule or creates and attaches a new one, keeping the name in sync
     private func getOrCreateSchedule() -> PillSchedule {
+        let cleanName = pill.name.trimmingCharacters(in: .whitespacesAndNewlines)
+        let currentName = cleanName.isEmpty ? "Pill" : cleanName
+        
         if let existing = pill.schedule {
+            // Always sync the schedule name with the current pill name
+            existing.name = currentName
+            try? context.save()
             return existing
         }
         
-        //let customPattern = Date().formatted(.dateTime.year().month(.twoDigits).day(.twoDigits))
-        //let scheduleName = (pill.name.isEmpty ? "Pill" : pill.name) + " (\(customPattern))"
-        let scheduleName = (pill.name.isEmpty ? "Pill" : pill.name)
-        
-        let newSchedule = PillSchedule(name: scheduleName)
+        let newSchedule = PillSchedule(name: currentName)
         context.insert(newSchedule)
         pill.schedule = newSchedule
         try? context.save()
