@@ -7,10 +7,10 @@
 
 import Foundation
 
-struct UserProfile: Codable {
-    var name: String
-    var email: String
-    var gender: String
-    var age: Int
-    var joinedDate: Date
+struct UserProfile: Codable, Equatable {
+    var name: String = ""
+    var email: String = ""
+    var gender: String = "Prefer not to say"
+    var age: Int = 25
+    var joinedDate: Date = Date()
 }

@@ -7,132 +7,58 @@
 
 import SwiftUI
 
-enum Gender: String, CaseIterable, Identifiable {
-    case male = "Male"
-    case female = "Female"
-    case other = "Other"
-    case preferNotToSay = "Prefer not to say"
-    
-    var id: String { self.rawValue }
-}
-
 struct ProfileView: View {
-    @StateObject private var viewModel = ProfileViewModel()
-    @State private var isEditing = false
+    @State private var profile = ProfileStorage.load()
+    @State private var showSavedAlert = false
     
-    @State private var selectedGender: Gender = .preferNotToSay
-    @State private var age: Int = 25
+    private let genderOptions = ["Male", "Female", "Other", "Prefer not to say"]
     
     var body: some View {
-        NavigationView {
+        NavigationStack {
             Form {
-                // Section 1: Avatar Header
-                Section {
+                Section("Personal Details") {
+                    TextField("Name", text: $profile.name)
+                        .autocorrectionDisabled()
+                    
+                    TextField("Email", text: $profile.email)
+                        .keyboardType(.emailAddress)
+                        .textInputAutocapitalization(.never)
+                        .autocorrectionDisabled()
+                }
+                
+                Section("Demographics") {
+                    Picker("Gender", selection: $profile.gender) {
+                        ForEach(genderOptions, id: \.self) { option in
+                            Text(option).tag(option)
+                        }
+                    }
+                    
+                    Stepper("Age: \(profile.age)", value: $profile.age, in: 1...120)
+                }
+                
+                Section("Account Info") {
                     HStack {
+                        Text("Joined Date")
                         Spacer()
-                        VStack(spacing: 12) {
-                            Image(systemName: "person.circle.fill")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 90, height: 90)
-                                .foregroundColor(.accentColor)
-                            
-                            Text(viewModel.profile.name)
-                                .font(.title2)
-                                .fontWeight(.semibold)
-                            
-                            Text("Member since \(viewModel.profile.joinedDate.formatted(date: .abbreviated, time: .omitted))")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                        }
-                        Spacer()
-                    }
-                    .padding(.vertical, 8)
-                }
-                
-                // Section 2: Account Information Details
-                Section(header: Text("Account Details")) {
-                    if isEditing {
-                        TextField("Name", text: $viewModel.profile.name)
-                        TextField("Email", text: $viewModel.profile.email)
-                            .keyboardType(.emailAddress)
-                            .autocapitalization(.none)
-                        Picker("Gender", selection: $selectedGender) {
-                                                ForEach(Gender.allCases) { gender in
-                                                    Text(gender.rawValue).tag(gender)
-                                                }
-                                            }
-                                            .pickerStyle(.menu)
-
-                                            Stepper("Age: \(age)", value: $age, in: 1...120)
-                        
-                        
-                    } else {
-                        HStack {
-                            Text("Name")
-                            Spacer()
-                            Text(viewModel.profile.name).foregroundColor(.secondary)
-                        }
-                        HStack {
-                            Text("Email")
-                            Spacer()
-                            Text(viewModel.profile.email).foregroundColor(.secondary)
-                        }
-                        HStack {
-                            Text("Gender")
-                            Spacer()
-                            Text(viewModel.profile.gender).foregroundColor(.secondary)
-                        }
-                        HStack {
-                            Text("Age")
-                            Spacer()
-                            Text(String(viewModel.profile.age)).foregroundColor(.secondary)
-                        }
-                        
+                        Text(profile.joinedDate.formatted(date: .abbreviated, time: .omitted))
+                            .foregroundStyle(.secondary)
                     }
                 }
                 
-                // Section 3: Preferences & Toggles
-                //Section(header: Text("Preferences")) {
-                //    Toggle("Newsletter Subscription", isOn:
-                //    $viewModel.profile.isSubscribedToNewsletter)
-                //  .disabled(!isEditing)
-                //}
-                
-                // Section 4: Log Out Actions
-                /*
                 Section {
-                    Button(action: {
-                        viewModel.logout()
-                    }) {
-                        Text("Log Out")
-                            .foregroundColor(.red)
-                            .frame(maxWidth: .infinity, alignment: .center)
+                    Button("Save Profile") {
+                        ProfileStorage.save(profile)
+                        showSavedAlert = true
                     }
+                    .frame(maxWidth: .infinity)
                 }
-                 */
             }
-            .navigationTitle("Profile")
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(action: {
-                        if isEditing {
-                            viewModel.saveChanges()
-                        }
-                        isEditing.toggle()
-                    }) {
-                        Text(isEditing ? "Done" : "Edit")
-                            .fontWeight(isEditing ? .bold : .regular)
-                    }
-                }
+            .navigationTitle("User Profile")
+            .alert("Profile Saved", isPresented: $showSavedAlert) {
+                Button("OK", role: .cancel) { }
+            } message: {
+                Text("Your profile has been serialized to JSON and saved.")
             }
         }
-    }
-}
-
-// Xcode Canvas Preview Layout Provider
-struct ProfileView_Previews: PreviewProvider {
-    static var previews: some View {
-        ProfileView()
     }
 }
