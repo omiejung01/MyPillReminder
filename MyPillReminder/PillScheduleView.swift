@@ -15,7 +15,6 @@ struct PillScheduleView: View {
     @Bindable var schedule: PillSchedule
     @Environment(\.modelContext) private var context  // 👈 Add context
     
-    // Day helper mapping for the weekday selector
     private let days: [(label: String, keyPath: ReferenceWritableKeyPath<PillSchedule, Bool>)] = [
         ("S", \.sunday),
         ("M", \.monday),
@@ -30,7 +29,6 @@ struct PillScheduleView: View {
         ScrollView(.vertical, showsIndicators: true) {
             VStack(spacing: 20) {
                 
-                // MARK: - Schedule Info
                 GroupBox("Schedule Information") {
                     VStack(alignment: .leading, spacing: 8) {
                         TextField("Schedule Name (e.g. Daily Vitamins)", text: $schedule.name)
@@ -43,7 +41,6 @@ struct PillScheduleView: View {
                     .padding(.vertical, 4)
                 }
                 
-                // MARK: - Frequency Section
                 GroupBox("Repeat Frequency") {
                     VStack(spacing: 14) {
                         Picker("Frequency", selection: Binding(
@@ -65,7 +62,6 @@ struct PillScheduleView: View {
                         }
                         .pickerStyle(.segmented)
                         
-                        // Weekday Circular Badges (Weekly Mode)
                         if schedule.weekly {
                             VStack(alignment: .leading, spacing: 8) {
                                 Text("Repeat on")
@@ -99,12 +95,10 @@ struct PillScheduleView: View {
                     .padding(.vertical, 4)
                 }
                 
-                // MARK: - Timing Method
                 GroupBox("Timing Method") {
                     VStack(spacing: 12) {
                         Toggle("Specific Hour", isOn: $schedule.specific_hour.animation(.easeInOut(duration: 0.2)))
                         
-                        // Inline Wheel Time Picker
                         if schedule.specific_hour {
                             VStack(spacing: 6) {
                                 DatePicker(
@@ -127,7 +121,6 @@ struct PillScheduleView: View {
                     .padding(.vertical, 4)
                 }
                 
-                // MARK: - Meal & Bed Routine Times
                 if schedule.daily_time {
                     GroupBox("Meal & Bed Schedule") {
                         VStack(spacing: 16) {
@@ -186,7 +179,6 @@ struct PillScheduleView: View {
                     }
                 }
                 
-                // MARK: - Additional Notes
                 GroupBox("Instructions / Notes") {
                     VStack(alignment: .leading, spacing: 6) {
                         TextField("e.g. Take with food, avoid dairy", text: $schedule.additional_detail, axis: .vertical)

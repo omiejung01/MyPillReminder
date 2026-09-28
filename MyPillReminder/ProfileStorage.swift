@@ -10,7 +10,6 @@ import Foundation
 class ProfileStorage {
     private static let key = "saved_user_profile_json"
     
-    // MARK: - Save to JSON (Encodable)
     static func save(_ profile: UserProfile) {
         let encoder = JSONEncoder()
         encoder.outputFormatting = .prettyPrinted // Clean readable JSON
@@ -29,7 +28,6 @@ class ProfileStorage {
         }
     }
     
-    // MARK: - Load from JSON (Decodable)
     static func load() -> UserProfile {
         guard let data = UserDefaults.standard.data(forKey: key) else {
             return UserProfile() // Return default empty profile if none saved

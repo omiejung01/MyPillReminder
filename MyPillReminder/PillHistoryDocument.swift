@@ -3,7 +3,7 @@
 //  MyPillReminder
 //
 //  Created by Omie C on 14/9/2569 BE.
-//
+// Gemini
 
 import SwiftUI
 import UniformTypeIdentifiers

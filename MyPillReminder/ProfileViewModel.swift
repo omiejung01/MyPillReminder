@@ -12,7 +12,6 @@ class ProfileViewModel: ObservableObject {
     @Published var profile: UserProfile
     
     init() {
-        // Mock data initialization
         self.profile = UserProfile(
             name: "Jane Doe",
             email: "jane.doe@example.com",
@@ -24,12 +23,10 @@ class ProfileViewModel: ObservableObject {
     }
     
     func saveChanges() {
-        // Logic to persist data locally or update Firestore/Backend
         print("Profile saved successfully.")
     }
     
     func logout() {
-        // Triggers the authentication flow sign-out routine
         print("User logged out.")
     }
 }
