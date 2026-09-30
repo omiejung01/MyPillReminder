@@ -11,12 +11,13 @@ struct ContentView: View {
     var body: some View {
         
         TabView {
-            Tab ("Pills", systemImage: "pencil.and.list.clipboard") {
-                PillList()
-            }
-            
+
             Tab ("Dashboard", systemImage: "inset.filled.rectangle.and.person.filled") {
                 DashboardView()
+            }
+            
+            Tab ("Pills", systemImage: "pencil.and.list.clipboard") {
+                PillList()
             }
             
             Tab("History", systemImage: "clock.arrow.circlepath") {
